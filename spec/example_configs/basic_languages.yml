@@ -1,0 +1,13 @@
+default:
+  - en-GB
+
+countries:
+  CH:
+    - de
+    - fr
+    - it
+
+  BE:
+    - pl
+    - nl
+    - de
