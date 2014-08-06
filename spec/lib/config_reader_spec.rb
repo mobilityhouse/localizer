@@ -1,8 +1,4 @@
 describe Localizer::ConfigReader do
-  before(:all) do
-    described_class.config_path = "#{File.dirname(__FILE__)}/../example_configs/basic_languages.yml"
-  end
-
   let(:reader) { described_class.new }
 
   it 'return default locale from file' do
