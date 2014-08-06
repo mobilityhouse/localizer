@@ -1,12 +1,10 @@
 describe Localizer::LocalesService do
   subject { described_class.new('oem') }
 
-  let(:locales) {
-    { 'oem' => ['pl-PL', 'de-DE', 'fr-DE', 'en-US', 'en-GB'] }
-  }
+  let(:locales_with_countries) { Hash['oem' => %w(pl-PL de-DE fr-DE en-US en-GB)] }
 
   before do
-    allow(described_class).to receive(:configuration).and_return(locales)
+    allow(described_class).to receive(:configuration).and_return(locales_with_countries)
     I18n.available_locales = subject.available_locales
     I18n.fallbacks = subject.fallbacks_hash
   end
@@ -31,7 +29,7 @@ describe Localizer::LocalesService do
     end
   end
 
-  describe '#available_locales_array' do
+  describe '#available_locales' do
     let(:available_locales) {
       [:'pl-PL', :'de-DE', :'fr-DE', :'en-US', :'en-GB', :pl, :de, :fr, :en]
     }
@@ -42,9 +40,9 @@ describe Localizer::LocalesService do
   end
 
   describe '#languages' do
-    let(:languages) {
-      [Localizer::Locale.new('pl'), Localizer::Locale.new('de'), Localizer::Locale.new('fr'), Localizer::Locale.new('en')]
-    }
+    let(:languages) do
+      %w(pl de fr en).map {|language| Localizer::Locale.new(language)}
+    end
 
     it 'returns list of locales' do
       expect(subject.languages).to eq(languages)
@@ -52,43 +50,35 @@ describe Localizer::LocalesService do
   end
 
   describe '#by_country' do
-    let(:languages) { [Localizer::Locale.new('fr-DE'), Localizer::Locale.new('de-DE')] }
+    let(:expected_locales) { [Localizer::Locale.new('fr-DE'), Localizer::Locale.new('de-DE')] }
 
     it 'returns list of locales for given country' do
-      expect(subject.by_country('DE')).to match_array(languages)
+      expect(subject.by_country('DE')).to match_array(expected_locales)
     end
   end
 
-  describe '#by_country_and_language' do
+  describe '#locales_by' do
     context 'when both country and language are given' do
-      let(:languages) { [:'pl-PL'] }
+      let(:expected_locales) { [:'de-DE'] }
 
       it 'returns list of locales' do
-        expect(subject.symbols_by_country_and_language('PL', 'pl')).to eq(languages)
-      end
-    end
-
-    context 'when country is nil' do
-      let(:languages) { [:'de-DE'] }
-
-      it 'returns all locales with matching language' do
-        expect(subject.symbols_by_country_and_language(nil, 'de')).to eq(languages)
+        expect(subject.locale_symbols_by(country: 'DE', language: 'de')).to eq(expected_locales)
       end
     end
 
     context 'when language is nil' do
-      let(:languages) { [:'de-DE', :'fr-DE'] }
+      let(:expected_locales) { [:'de-DE', :'fr-DE'] }
 
       it 'returns all locales with matching country' do
-        expect(subject.symbols_by_country_and_language('DE', nil)).to eq(languages)
+        expect(subject.locale_symbols_by(country: 'DE')).to eq(expected_locales)
       end
     end
 
     context 'when language is unsupported in country' do
-      let(:languages) { [:'de-DE', :'fr-DE'] }
+      let(:expected_locales) { [:'de-DE', :'fr-DE'] }
 
       it 'returns all locales with matching country' do
-        expect(subject.symbols_by_country_and_language('DE', 'pl')).to eq(languages)
+        expect(subject.locale_symbols_by(country: 'DE', language: 'pl')).to eq(expected_locales)
       end
     end
   end

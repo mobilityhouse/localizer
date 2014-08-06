@@ -34,7 +34,7 @@ module Localizer
 
     def set_locale_by_params
       begin
-        I18n.locale = params[:locale] || locales_service.symbols_by_country_and_language(params[:country], params[:language]).first
+        I18n.locale = params[:locale] || locales_service.locale_symbols_by(params).first
       rescue I18n::InvalidLocale
         I18n.locale = I18n.default_locale
       end

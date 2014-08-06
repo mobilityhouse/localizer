@@ -5,53 +5,61 @@ module Localizer
     end
 
     def self.current
-      Locale.new(I18n.locale)
+      Locale.new I18n.locale
     end
 
-    def initialize(oem = nil)
-      @oem = oem || 'default'
-      @locales = LocalesService.configuration[@oem].map { |identifier| Locale.new(identifier) }
-    end
-
-    def fallbacks_hash
-      all.inject({}) do |memo, locale|
-        memo[locale.to_sym] = locale.fallbacks.map(&:to_sym)
-        memo
-      end
+    def initialize(oem = 'default')
+      @oem = oem
     end
 
     def available_locales
-      all.map(&:to_sym)
-    end
-
-    def all
-      (@locales + languages)
+      all_locales.map &:to_sym
     end
 
     def languages
-      @locales.uniq { |locale| locale.language }.map { |locale| Locale.new(locale.language) }
+      locales_with_countries.uniq(&:language).map { |locale| Locale.new(locale.language) }
     end
 
     def countries
-      @locales.map { |locale| locale.country }.uniq
+      locales_with_countries.map(&:country).uniq
     end
 
     def locales
-      @locales.sort_by { |locale| [I18n.transliterate(locale.localized_country).upcase, I18n.transliterate(locale.localized_language).upcase] }
+      locales_with_countries.sort_by do |locale|
+        [I18n.transliterate(locale.localized_country).upcase, I18n.transliterate(locale.localized_language).upcase]
+      end
     end
 
     def by_country(country)
       locales.select { |locale| locale.country == country }
     end
 
-    def symbols_by_country_and_language(country, language)
-      locales = @locales.select do |locale|
-        ((country.nil? ? true : locale.country == country)) && ((language.nil? ? true : locale.language == language))
-      end
+    def locales_by(conditions)
+      locales = by_country conditions[:country]
+      find_specific_language_if_exists(locales, conditions[:language])
+    end
 
-      locales = nil if locales.empty?
+    def locale_symbols_by(condition)
+      locales_by(condition).map(&:to_sym)
+    end
 
-      (locales || by_country(country)).map(&:to_sym)
+    def fallbacks_hash
+      Hash[all_locales.map {|locale| [locale.to_sym, locale.fallbacks.map(&:to_sym)] }]
+    end
+
+    private
+
+    def locales_with_countries
+      @locales_with_countries ||= LocalesService.configuration[@oem].map { |locale_name| Locale.new(locale_name) }
+    end
+
+    def all_locales
+      locales_with_countries + languages
+    end
+
+    def find_specific_language_if_exists(locales, language)
+      selected_locales = locales.select { |locale| locale.language == language}
+      selected_locales.empty? ? locales : selected_locales
     end
   end
 end
