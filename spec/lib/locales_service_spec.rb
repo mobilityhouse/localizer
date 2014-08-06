@@ -75,5 +75,21 @@ describe Localizer::LocalesService do
         expect(subject.symbols_by_country_and_language(nil, 'de')).to eq(languages)
       end
     end
+
+    context 'when language is nil' do
+      let(:languages) { [:'de-DE', :'fr-DE'] }
+
+      it 'returns all locales with matching country' do
+        expect(subject.symbols_by_country_and_language('DE', nil)).to eq(languages)
+      end
+    end
+
+    context 'when language is unsupported in country' do
+      let(:languages) { [:'de-DE', :'fr-DE'] }
+
+      it 'returns all locales with matching country' do
+        expect(subject.symbols_by_country_and_language('DE', 'pl')).to eq(languages)
+      end
+    end
   end
 end

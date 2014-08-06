@@ -45,9 +45,13 @@ module Localizer
     end
 
     def symbols_by_country_and_language(country, language)
-      @locales.select do |locale|
-        ((country.nil? ? true : locale.country == country)) && locale.language == language
-      end.map(&:to_sym)
+      locales = @locales.select do |locale|
+        ((country.nil? ? true : locale.country == country)) && ((language.nil? ? true : locale.language == language))
+      end
+
+      locales = nil if locales.empty?
+
+      (locales || by_country(country)).map(&:to_sym)
     end
   end
 end
