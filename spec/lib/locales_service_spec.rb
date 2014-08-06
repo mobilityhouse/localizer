@@ -7,7 +7,7 @@ describe Localizer::LocalesService do
 
   before do
     allow(described_class).to receive(:configuration).and_return(locales)
-    I18n.available_locales = subject.available_locales_array
+    I18n.available_locales = subject.available_locales
     I18n.fallbacks = subject.fallbacks_hash
   end
 
@@ -37,7 +37,7 @@ describe Localizer::LocalesService do
     }
 
     it 'returns array of available locales' do
-      expect(subject.available_locales_array).to eq(available_locales)
+      expect(subject.available_locales).to eq(available_locales)
     end
   end
 

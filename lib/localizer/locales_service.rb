@@ -20,7 +20,7 @@ module Localizer
       end
     end
 
-    def available_locales_array
+    def available_locales
       all.map(&:to_sym)
     end
 
