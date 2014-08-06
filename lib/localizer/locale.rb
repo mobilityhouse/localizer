@@ -1,29 +1,23 @@
 module Localizer
   class Locale
     include Comparable
-
     attr_reader :name, :language, :country
 
     def initialize(identifier)
       @name = identifier.to_s
-      @country = @name.split('-').last
-      @language = @name.split('-').first
+      @language, @country = @name.split('-')
     end
 
     def language_only?
-      @name.to_s.split('-').count == 1
+      @country.nil?
     end
 
     def parent
-      self.class.new(@name.split('-').first)
+      self.class.new @language
     end
 
     def fallbacks
-      if language_only?
-        [ self ]
-      else
-        [ parent ]
-      end
+      [parent]
     end
 
     def localized_country
@@ -39,11 +33,11 @@ module Localizer
     end
 
     def to_s
-      @name
+      name
     end
 
     def to_sym
-      to_s.to_sym
+      name.to_sym
     end
   end
 end

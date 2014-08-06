@@ -23,7 +23,7 @@ describe Localizer::Locale do
     let(:identifier) { 'pl-PL' }
 
     it 'returns only language locale' do
-      expect(subject.parent).to eq described_class.new(identifier.split('-').first)
+      expect(subject.parent).to eq described_class.new('pl')
     end
   end
 
