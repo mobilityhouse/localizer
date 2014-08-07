@@ -8,6 +8,7 @@ module Localizer
     end
 
     def configure_i18n_locales
+      set_language_and_country_by_locale if params[:locale].present?
       I18n.available_locales = locales_service.available_locales
       I18n.fallbacks = locales_service.fallbacks_hash
       set_locale_by_params
@@ -34,10 +35,17 @@ module Localizer
 
     def set_locale_by_params
       begin
-        I18n.locale = params[:locale] || locales_service.locale_symbols_by(params).first || I18n.default_locale
+        I18n.locale = locales_service.locale_symbols_by(params).first
       rescue I18n::InvalidLocale
         I18n.locale = I18n.default_locale
       end
+    end
+
+    def set_language_and_country_by_locale
+      locale = Locale.new params[:locale]
+
+      params[:language] = locale.language
+      params[:country] = locale.country
     end
   end
 end
