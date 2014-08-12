@@ -5,28 +5,50 @@ module Localizer
     included do
       prepend_before_filter :configure_i18n_locales
       before_filter :set_language_and_country
+      before_filter :check_for_supported_country
+
+      helper_method :current_country, :current_oem, :locales_service
     end
 
     def configure_i18n_locales
-      set_language_and_country_by_locale if params[:locale].present?
       I18n.available_locales = locales_service.available_locales
-      I18n.fallbacks = locales_service.fallbacks_hash
+      I18n.fallbacks         = locales_service.fallbacks_hash
       set_locale_by_params
     end
 
     def set_language_and_country
       params[:language] = current_locale.language
-      params[:country] = current_locale.country
+      params[:country]  = current_locale.country
     end
 
     def default_url_options
-      super.merge locale: I18n.locale
+      super.merge language: current_locale.language, country: current_locale.country
+    end
+
+    def current_country
+      params[:country]
+    end
+
+    def current_oem
+      params[:oem]
+    end
+
+    def locales_service
+      @locales_service ||= LocalesService.new current_oem
     end
 
     private
 
-    def locales_service
-      @locales_service ||= LocalesService.new params[:oem]
+    def check_for_supported_country
+      redirect_to country_not_supported_path unless supported_country?
+    end
+
+    def supported_country?
+      current_country.in? supported_countries_list
+    end
+
+    def supported_countries_list
+      locales_service.countries
     end
 
     def current_locale
@@ -39,13 +61,6 @@ module Localizer
       rescue I18n::InvalidLocale
         I18n.locale = I18n.default_locale
       end
-    end
-
-    def set_language_and_country_by_locale
-      locale = Locale.new params[:locale]
-
-      params[:language] = locale.language
-      params[:country] = locale.country
     end
   end
 end
