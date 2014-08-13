@@ -4,8 +4,8 @@ module Localizer
 
     included do
       prepend_before_filter :configure_i18n_locales
+      prepend_before_filter :check_for_supported_country
       before_filter :set_language_and_country
-      before_filter :check_for_supported_country
 
       helper_method :current_country, :current_oem, :locales_service
     end
