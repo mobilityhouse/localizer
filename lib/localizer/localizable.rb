@@ -29,10 +29,6 @@ module Localizer
       params[:country]
     end
 
-    def current_oem
-      params[:oem]
-    end
-
     def locales_service
       @locales_service ||= LocalesService.new current_oem
     end
