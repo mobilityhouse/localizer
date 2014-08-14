@@ -20,16 +20,30 @@ First you need to create a file (languages.yml) with your all locales and put it
     # languages.yml
     
     default:
-      - en-GB
-    oem1:
-      - fr-FR
-      - nl-NL
-      - en-NL
-    oem2:
-      - de-CH
-      - fr-CH
-      - it-CH
+      locales:
+        - en-GB
+      language_fallbacks:
+        de: DE
+        fr: FR        
+      country_fallbacks:
+        CH: de
+        FR: fr        
+    first_subject:
+      locales: 
+        - en-GB
+      language_fallbacks:
+        de: DE
+        fr: FR        
+      country_fallbacks:
+        CH: de
+        FR: fr        
 
+#### Create initializer file
+
+    Localizer.configure do |config|
+      config.except_actions = [:country_not_supported, :country_not_supported_legal_notice]
+      config.country_not_supported_url = "/pages/country_not_supported"
+    end
 
 #### Add localizer to your ApplicationController
 
@@ -42,14 +56,16 @@ Add this lines to application_controller.rb:
     end
     
 Localizer setups 3 things for I18n:
-* I18n.available_locales
-* I18n.fallbacks
-* I18n.locale
+- I18n.available_locales
+- I18n.fallbacks
+- I18n.locale
 
 Value of I18n.locale depends on:
-* Param 'locale'
-* Params 'country' and 'language'
-* Param 'country' if 'language' is missing (first language for this country will be used)
+- Params `country` and `language`
+- Param `country` if `language` is missing (taken from from `country_fallbacks`)
+- Param `language` if `country` is missing (taken from `language_fallbacks`)
+
+If we can't detect country or country is not supported user will be redirected to `config.country_not_supported_url`
 
 ## Contributing
 

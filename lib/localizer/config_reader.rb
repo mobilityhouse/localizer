@@ -1,23 +1,10 @@
 module Localizer
-  class ConfigReader
-    cattr_accessor :config_path
+  class Configuration
+    attr_accessor :except_actions, :country_not_supported_url
 
-    def default_locale
-      config_hash[:default].first
-    end
-
-    def countries
-      config_hash[:countries]
-    end
-
-    private
-
-    def config_hash
-      @config_hash ||= load_config_from_file
-    end
-
-    def load_config_from_file
-      YAML.load(File.read(config_path)).with_indifferent_access
+    def initialize
+      @except_actions = []
+      @country_not_supported_url = nil
     end
   end
 end

@@ -1,7 +1,25 @@
 describe Localizer::LocalesService do
   subject { described_class.new('oem') }
 
-  let(:locales_with_countries) { Hash['oem' => %w(pl-PL de-DE fr-DE en-US en-GB)] }
+  let(:locales_with_countries) do
+    {
+      'oem' => {
+        locales: %w(pl-PL de-DE fr-DE en-US en-GB),
+        country_fallbacks: {
+          'PL' => :pl,
+          'DE' => :de,
+          'US' => :en,
+          'GB' => :en
+        },
+        language_fallbacks: {
+          pl: 'PL',
+          de: 'DE',
+          fr: 'DE',
+          en: 'GB'
+        }
+      }
+    }.with_indifferent_access
+  end
 
   before do
     allow(described_class).to receive(:configuration).and_return(locales_with_countries)

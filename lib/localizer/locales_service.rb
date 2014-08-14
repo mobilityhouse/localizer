@@ -1,7 +1,7 @@
 module Localizer
   class LocalesService
     def self.configuration
-      @@configuration ||= YAML.load_file('config/languages.yml')
+      @@configuration ||= YAML.load_file('config/languages.yml').with_indifferent_access
     end
 
     def self.current
@@ -47,10 +47,18 @@ module Localizer
       Hash[all_locales.map {|locale| [locale.to_sym, locale.fallbacks.map(&:to_sym)] }]
     end
 
+    def country_fallbacks
+      LocalesService.configuration[@oem][:country_fallbacks]
+    end
+
+    def language_fallbacks
+      LocalesService.configuration[@oem][:language_fallbacks]
+    end
+
     private
 
     def locales_with_countries
-      @locales_with_countries ||= LocalesService.configuration[@oem].map { |locale_name| Locale.new(locale_name) }
+      @locales_with_countries ||= LocalesService.configuration[@oem][:locales].map { |locale_name| Locale.new(locale_name) }
     end
 
     def all_locales
