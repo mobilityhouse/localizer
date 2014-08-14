@@ -3,11 +3,9 @@ module Localizer
     extend ActiveSupport::Concern
 
     included do
-      with_options except: :country_not_supported do |c|
-        c.prepend_before_filter :configure_i18n_locales
-        c.prepend_before_filter :check_for_supported_country
-        c.before_filter :set_language_and_country
-      end
+      prepend_before_filter :configure_i18n_locales
+      prepend_before_filter :check_for_supported_country
+      before_filter :set_language_and_country
 
       helper_method :current_country, :current_oem, :locales_service
     end
