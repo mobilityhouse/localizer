@@ -32,7 +32,7 @@ module Localizer
     end
 
     def current_country
-      params[:country]
+      params[:country].upcase
     end
 
     def current_language
