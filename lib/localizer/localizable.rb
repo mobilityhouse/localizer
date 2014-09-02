@@ -8,6 +8,8 @@ module Localizer
     end
 
     def configure_i18n_locales
+      upcase_country_param
+
       I18n.available_locales = locales_service.available_locales
       I18n.fallbacks         = locales_service.fallbacks_hash
 
@@ -32,7 +34,7 @@ module Localizer
     end
 
     def current_country
-      params[:country].upcase
+      params[:country]
     end
 
     def current_language
@@ -69,6 +71,10 @@ module Localizer
       rescue I18n::InvalidLocale
         I18n.locale = I18n.default_locale
       end
+    end
+
+    def upcase_country_param
+      params[:country].try :upcase!
     end
   end
 end
