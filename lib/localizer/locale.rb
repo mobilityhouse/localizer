@@ -20,12 +20,12 @@ module Localizer
       [parent]
     end
 
-    def localized_country
-      I18n.with_locale(self.to_sym) { I18n.t(self.country, scope: :countries) }
+    def localized_country(options = {})
+      I18n.with_locale(self.to_sym) { I18n.t(self.country, options.merge(scope: :countries)) }
     end
 
-    def localized_language
-      I18n.with_locale(self.to_sym) { I18n.t(self.language, scope: :languages) }
+    def localized_language(options = {})
+      I18n.with_locale(self.to_sym) { I18n.t(self.language, options.merge(scope: :languages)) }
     end
 
     def <=>(other)
