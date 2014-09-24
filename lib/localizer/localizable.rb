@@ -9,6 +9,7 @@ module Localizer
 
     def configure_i18n_locales
       upcase_country_param
+      restore_locale_params_from_cookies
 
       I18n.available_locales = locales_service.available_locales
       I18n.fallbacks         = locales_service.fallbacks_hash
@@ -19,6 +20,7 @@ module Localizer
       check_for_supported_country
 
       set_locale_by_params
+      set_cookies_by_params
     end
 
     def set_country_by_language
@@ -71,6 +73,16 @@ module Localizer
       rescue I18n::InvalidLocale
         I18n.locale = I18n.default_locale
       end
+    end
+
+    def set_cookies_by_params
+      cookies[:country] = { value: params[:country], expires: 1.year.from_now }
+      cookies[:language] = { value: params[:language], expires: 1.year.from_now }
+    end
+
+    def restore_locale_params_from_cookies
+      params[:country] ||= cookies[:country]
+      params[:language] ||= cookies[:language]
     end
 
     def upcase_country_param
