@@ -19,14 +19,6 @@ describe Localizer::Locale do
     end
   end
 
-  describe '#parent' do
-    let(:identifier) { 'pl-PL' }
-
-    it 'returns only language locale' do
-      expect(subject.parent).to eq described_class.new('pl')
-    end
-  end
-
   describe '#fallbacks' do
     context 'when locale is language only' do
       let(:identifier) { 'pl'}
@@ -40,7 +32,7 @@ describe Localizer::Locale do
       let(:identifier) { 'pl-PL' }
 
       it 'returns array containing parent locale' do
-        expect(subject.fallbacks).to eq [described_class.new('pl')]
+        expect(subject.fallbacks).to eq [described_class.new('pl-PL'), described_class.new('pl')]
       end
     end
   end
