@@ -12,12 +12,11 @@ module Localizer
       @country.nil?
     end
 
-    def parent
-      self.class.new @language
-    end
-
     def fallbacks
-      [parent]
+      fallbacks = []
+      fallbacks << self.class.new(@name) if @country
+      fallbacks << self.class.new(@language)
+      fallbacks
     end
 
     def localized_country(options = {})

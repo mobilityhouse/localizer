@@ -30,11 +30,11 @@ describe Localizer::LocalesService do
   describe '#fallbacks_hash' do
     let(:fallbacks_hash) {
       {
-        :'pl-PL' => [:pl],
-        :'de-DE' => [:de],
-        :'fr-DE' => [:fr],
-        :'en-US' => [:en],
-        :'en-GB' => [:en],
+        :'pl-PL' => [:'pl-PL', :pl],
+        :'de-DE' => [:'de-DE', :de],
+        :'fr-DE' => [:'fr-DE', :fr],
+        :'en-US' => [:'en-US', :en],
+        :'en-GB' => [:'en-GB', :en],
         :pl      => [:pl],
         :en      => [:en],
         :de      => [:de],
