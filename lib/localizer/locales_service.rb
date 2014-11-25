@@ -21,7 +21,7 @@ module Localizer
     end
 
     def countries
-      locales_with_countries.map(&:country).uniq
+      locales_with_countries.map(&:country).uniq.sort
     end
 
     def locales
