@@ -55,6 +55,10 @@ module Localizer
       LocalesService.configuration[@oem][:language_fallbacks]
     end
 
+    def languages_for_country(country)
+      by_country(country).map{ |locale| locale.localized_language(scope_prefix: nil) }
+    end
+
     private
 
     def locales_with_countries
