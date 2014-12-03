@@ -3,6 +3,7 @@ module Localizer
     extend ActiveSupport::Concern
 
     included do
+      helper Localizer::LocalizerHelper
       prepend_before_filter :configure_i18n_locales, except: Localizer.configuration.except_actions
       helper_method :current_country, :current_oem, :current_language, :locales_service
     end
