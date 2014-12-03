@@ -1,5 +1,11 @@
 module Localizer
   module LocalizerHelper
+    def sorted_languages_by_country(current_country, with_country = false)
+      locales_service.by_country(current_country).sort_by do |locale|
+        language_sort_token(locale, with_country)
+      end
+    end
+
     def sorted_languages(with_country = false)
       locales_service.locales.sort_by do |locale|
         language_sort_token(locale, with_country)
