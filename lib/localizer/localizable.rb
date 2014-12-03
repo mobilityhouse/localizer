@@ -77,8 +77,8 @@ module Localizer
     end
 
     def set_cookies_by_params
-      cookies[:country] = { value: params[:country], expires: 1.year.from_now, domain: Localizer.configuration.cookie_domain.call }
-      cookies[:language] = { value: params[:language], expires: 1.year.from_now, domain: Localizer.configuration.cookie_domain.call }
+      cookies[:country] = { value: params[:country], expires: 1.year.from_now, domain: Localizer.configuration.cookie_domain.call(current_oem) }
+      cookies[:language] = { value: params[:language], expires: 1.year.from_now, domain: Localizer.configuration.cookie_domain.call(current_oem) }
     end
 
     def restore_locale_params_from_cookies
