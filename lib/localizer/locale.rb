@@ -38,5 +38,17 @@ module Localizer
     def to_sym
       name.to_sym
     end
+
+    def name_to_display(with_country = false)
+      if with_country
+        "#{localized_country(scope_prefix: nil)} - #{localized_language(scope_prefix: nil)}"
+      else
+        localized_language(scope_prefix: nil)
+      end
+    end
+
+    def sort_key(with_country)
+      with_country ? localized_country(scope_prefix: nil) : localized_language(scope_prefix: nil)
+    end
   end
 end
