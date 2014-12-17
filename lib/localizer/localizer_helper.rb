@@ -24,6 +24,18 @@ module Localizer
       end
     end
 
+    def collection_for_country_select(oem)
+      Localizer::LocalesService.new(oem).countries.map do |country|
+        [I18n.t("countries.#{country}", scope_prefix: nil), country]
+      end
+    end
+
+    def collection_for_language_select(oem)
+      Localizer::LocalesService.new(oem).languages.map do |language|
+        [I18n.t("languages.#{language}", scope_prefix: nil), language]
+      end
+    end
+
     private
     def language_sort_token(locale, with_country)
       if with_country
