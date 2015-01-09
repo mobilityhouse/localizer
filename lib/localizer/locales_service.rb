@@ -59,11 +59,11 @@ module Localizer
       by_country(country).map{ |locale| locale.localized_language(scope_prefix: nil) }
     end
 
-    private
-
     def locales_with_countries
       @locales_with_countries ||= LocalesService.configuration[@oem][:locales].map { |locale_name| Locale.new(locale_name) }
     end
+
+    private
 
     def all_locales
       locales_with_countries + languages
