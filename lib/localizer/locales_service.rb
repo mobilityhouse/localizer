@@ -59,10 +59,18 @@ module Localizer
       by_country(country).map{ |locale| locale.localized_language(scope_prefix: nil) }
     end
 
+    def locales_with_countries
+      @locales_with_countries ||= locales_for_oem if oem_exists?
+    end
+
     private
 
-    def locales_with_countries
-      @locales_with_countries ||= LocalesService.configuration[@oem][:locales].map { |locale_name| Locale.new(locale_name) }
+    def locales_for_oem
+      LocalesService.configuration[@oem][:locales].map { |locale_name| Locale.new(locale_name) }
+    end
+
+    def oem_exists?
+      LocalesService.configuration.has_key? @oem
     end
 
     def all_locales
