@@ -1,6 +1,8 @@
 require 'active_support/all'
 require 'yaml'
+require 'money'
 
+Dir["#{File.dirname(__FILE__)}/initializers/**/*.rb"].each { |file| require file }
 Dir["#{File.dirname(__FILE__)}/localizer/**/*.rb"].each { |file| require file }
 
 module Localizer
