@@ -8,7 +8,7 @@ module Localizer
       Locale.new I18n.locale
     end
 
-    def initialize(oem)
+    def initialize(oem = nil)
       @oem = oem || 'default'
     end
 
