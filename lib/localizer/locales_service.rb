@@ -8,8 +8,8 @@ module Localizer
       Locale.new I18n.locale
     end
 
-    def initialize(oem = nil)
-      @oem = oem || 'default'
+    def initialize(oem = 'default')
+      @oem = LocalesService.configuration.keys.include?(oem) ? oem : 'default'
     end
 
     def available_locales
