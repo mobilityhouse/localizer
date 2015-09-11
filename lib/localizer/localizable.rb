@@ -50,8 +50,13 @@ module Localizer
 
     private
 
+    def redirect_params
+      return "/?#{request.query_parameters.to_param}" if request.query_parameters.present?
+      return "/?#{request.request_parameters.to_param}" if request.request_parameters.present?
+    end
+
     def check_for_supported_country
-      redirect_to Localizer.configuration.country_not_supported_url unless supported_country?
+      redirect_to "#{Localizer.configuration.country_not_supported_url}#{redirect_params}" unless supported_country?
     end
 
     def supported_country?
