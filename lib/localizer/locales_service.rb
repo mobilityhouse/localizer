@@ -44,7 +44,9 @@ module Localizer
     end
 
     def fallbacks_hash
-      Hash[all_locales.map {|locale| [locale.to_sym, locale.fallbacks.map(&:to_sym)] }]
+      Hash[all_locales.map {|locale| [locale.to_sym, locale.fallbacks.map(&:to_sym)] }].tap do |h|
+        h.default = []
+      end
     end
 
     def country_fallbacks
