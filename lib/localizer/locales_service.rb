@@ -1,6 +1,12 @@
 module Localizer
   class LocalesService
-    def self.configuration(path = 'config/languages.yml')
+    
+    class << self
+      attr_accessor :configuration_path
+    end
+    
+    def self.configuration
+      path = LocalesService.configuration_path || 'config/languages.yml'
       @@configuration ||= YAML.load_file(path).with_indifferent_access
     end
 
@@ -8,8 +14,8 @@ module Localizer
       Locale.new I18n.locale
     end
 
-    def initialize(oem = 'default', path = 'config/languages.yml')
-      @oem = LocalesService.configuration(path).keys.include?(oem) ? oem : 'default'
+    def initialize(oem = 'default')
+      @oem = LocalesService.configuration.keys.include?(oem) ? oem : 'default'
     end
 
     def available_locales
